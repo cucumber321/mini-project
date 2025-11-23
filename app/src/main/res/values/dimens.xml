@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+
+    <dimen name="form_horizontal_padding">20dp</dimen>
+    <dimen name="form_vertical_padding">50dp</dimen>
+    <dimen name="form_vertical_gap">20dp</dimen>
+
+    <dimen name="login_signup_text_height">8dp</dimen>
+    <dimen name="round_corner">10dp</dimen>
+    <dimen name="thick_button_height">50dp</dimen>
+    <dimen name="gap_small">10dp</dimen>
+    <dimen name="gap_medium">20dp</dimen>
+    <dimen name="menu_option_height">100dp</dimen>
+</resources>

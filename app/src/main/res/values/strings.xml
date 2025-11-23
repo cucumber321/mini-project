@@ -1,0 +1,136 @@
+<resources>
+    <string name="app_name">BICS</string>
+    <string name="login_title">Welcome!</string>
+
+    <string name="username">Username</string>
+
+    <string name="email">Email: </string>
+    <string name="email_placeholder">abc@example.com</string>
+
+    <string name="password">Password: </string>
+    <string name="confirm_password">Confirm Password: </string>
+    <string name="show_password">Show Password</string>
+    <string name="hide_password">Hide Password</string>
+    <string name="forgot_password">Forgot Password</string>
+
+    <string name="login_text">Log In</string>
+    <string name="login_success">Login Success!</string>
+
+    <string name="logout_text">Log Out</string>
+    <string name="logout_success">Log Out Success!</string>
+
+    <string name="signup_text">Sign Up</string>
+    <string name="signup_success">Sign Up Success! Please Verify Email to Log In</string>
+
+    <string name="continue_text">Continue</string>
+    <string name="back_button">Back Button</string>
+    <string name="arrow_right">Right Arrow</string>
+    <string name="arrow_left">Left Arrow</string>
+
+    <string name="error_message_none" />
+    <string name="error_message_empty_email">Email Cannot Be Empty</string>
+    <string name="error_message_invalid_email_format">Invalid Email Format</string>
+    <string name="error_message_empty_password">Password Cannot Be Empty</string>
+    <string name="error_message_different_password">Passwords Do Not Match</string>
+    <string name="error_message_invalid_credentials">Email or Password is Incorrect</string>
+    <string name="error_message_unknown">An Unknown Error Occurred, Please Try Again later</string>
+    <string name="error_message_weak_password">Password must be at least 6 characters</string>
+    <string name="error_message_email_in_use">Email Has Been Taken</string>
+    <string name="error_message_network_error">A Network Issue Has Occurred, Please Try Again Later</string>
+    <string name="error_message_empty_username">Username cannot be empty</string>
+    <string name="error_message_user_disabled">Your Account Has Been Disabled</string>
+    <string name="error_message_unverified_email">Email Is Not Verified. Please Verify Email Before Logging In</string>
+    <string name="error_message_invalid_password">Invalid Password</string>
+    <string name="error_message_same_email">Email Cannot Be The Same As The Current Email</string>
+
+
+    <string name="edit_profile">Edit Profile</string>
+    <string name="edit_profile_success">Profile Successfully Updated</string>
+
+    <string name="profile_picture">Profile Picture</string>
+    <string name="choose_image">Choose Image</string>
+
+    <string name="security_settings">Security Settings</string>
+    <string name="contact_us">Contact Us</string>
+
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="success">Success</string>
+    <string name="confirm">Confirm</string>
+    <string name="menu">Menu</string>
+
+    <string name="confirm_password_title">Enter Password</string>
+    <string name="current_password">Enter Current Password to Continue:</string>
+
+    <string name="change_email">Change Email</string>
+    <string name="change_email_success">Email verification has been sent to your new email. Please verify your new email to change your email.</string>
+
+    <string name="change_password">Change Password</string>
+    <string name="change_password_success">Password Successfully Changed</string>
+
+    <string name="new_email">Enter New Email Address:</string>
+    <string name="new_password">Enter New Password:</string>
+
+    <string name="forgot_password_confirmation">By pressing continue, a reset password email will be sent to your mailbox.</string>
+    <string name="forgot_password_success">Password Reset Email Has Been Sent. Please Check Your Inbox.</string>
+
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_account_confirmation">Are You Sure You Want to Delete Your Account?</string>
+    <string name="delete_account_success">Account Has Been Successfully Deleted</string>
+
+    <string name="copy_phone">Copy Phone Number</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="contact_email">Customer Support Email</string>
+
+    <string name="park_and_pay">Park And Pay</string>
+    <string name="balance">Balance</string>
+    <string name="balance_format">RM%.2f</string>
+    <string name="top_up">Top Up</string>
+    <string name="top_up_success">Top Up Success!</string>
+    <string name="history">History</string>
+    <string name="payments">Payments</string>
+    <string name="sessions">Sessions</string>
+    <string name="refresh">Refresh</string>
+    <string name="new_text">New</string>
+    <string name="parking_sessions">Parking Sessions</string>
+    <string name="new_parking_session">New Parking Session</string>
+    <string name="current_balance">"Current Balance: "</string>
+    <string name="error_message_insufficient_balance">Insufficient Balance</string>
+    <string name="hour_min_format">%02dh %02dm</string>
+    <string name="extend">Extend</string>
+    <string name="extend_parking_session">Extend Parking Session</string>
+    <string name="amount">"Amount"</string>
+    <string name="view_bookings">ViewBookings\n</string>
+    <string name="view_payments">View Payments</string>
+    <string name="bookings">Bookings</string>
+    <string name="payment_details">Payment Details</string>
+    <string name="uid">User ID</string>
+    <string name="payment_date">Payment Date</string>
+    <string name="title">Title</string>
+    <string name="payment_id">Payment ID</string>
+    <string name="public_parking">Public Parking</string>
+    <string name="private_parking">Private Parking</string>
+    <string name="new_parking_session_success">Parking Session Successfully Created</string>
+    <string name="extend_parking_session_success">Parking Session Successfully Extended</string>
+    <string name="error_message_empty_spot_name">Spot Name Cannot Be Empty</string>
+    <string name="error_message_invalid_coords">Must be a number between -90 and 90, inclusive</string>
+    <string name="edit_public_parking">Edit Public Parking</string>
+    <string name="spot_name">"Spot Name: "</string>
+    <string name="latitude">"Latitude: "</string>
+    <string name="longitude">"Longitude: "</string>
+    <string name="status">"Status: "</string>
+    <string name="error_message_invalid_latitude">Latitude must be between -90 and 90</string>
+    <string name="error_message_invalid_longitude">Longitude must be between -180 and 180</string>
+    <string name="booked_by">"Booked By: "</string>
+    <string name="report_success">User Successfully Reported</string>
+    <string name="delete_notification_success">Notification Successfully Deleted</string>
+    <string name="loading">Loading...</string>
+    <string name="error_message_email_changed">Email Has Been Changed. Logging Out.</string>
+    <string name="select_vehicle">Select Vehicle</string>
+    <string name="add_vehicle">Add Vehicle</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="select_location">Select Location</string>
+    <string name="no_parking_session">No Parking Sessions</string>
+
+</resources>
