@@ -1,15 +1,15 @@
 package com.example.bics.ui.user.viewmodel
 
-import android.content.Context
 import android.util.Patterns
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.bics.data.user.ErrorCode
 import com.example.bics.data.user.FieldUiState
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 abstract class FormViewModel: ViewModel() {
@@ -19,6 +19,15 @@ abstract class FormViewModel: ViewModel() {
 
     val available  = _available.asStateFlow()
     val error = _error.asStateFlow()
+
+    init {
+        _error.onEach {
+            if (it != ErrorCode.None) {
+                delay(1000)
+                _error.update { ErrorCode.None }
+            }
+        }.launchIn(viewModelScope)
+    }
 
     protected fun validateEmail(uiState: MutableStateFlow<FieldUiState>): Boolean {
         uiState.update {

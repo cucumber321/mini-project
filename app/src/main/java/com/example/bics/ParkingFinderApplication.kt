@@ -9,7 +9,7 @@ class BicsApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        container = AppDataContainer(this)
+        container = AppDataContainer()
     }
 }
 

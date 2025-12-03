@@ -8,6 +8,4 @@ data class UserProfile(
     val email: String = "",
     val username: String = UserDataSource.DEFAULT_USERNAME,
     val profilePictureUri: Uri = UserDataSource.defaultProfilePicture,
-    val balance: Double = 0.0,
-    val isAdmin: Boolean = false
 )

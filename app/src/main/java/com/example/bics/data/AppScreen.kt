@@ -13,4 +13,6 @@ enum class AppScreen {
     ChangePassword,
     ChangeEmail,
     Success,
+    ScheduleList,
+    FilterSchedule,
 }

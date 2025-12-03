@@ -36,6 +36,7 @@ import com.example.bics.ui.theme.BICSTheme
 import com.example.bics.ui.user.ErrorCodeLaunchedEffect
 import com.example.bics.data.AppScreen
 import com.example.bics.ui.home.HomeScreen
+import com.example.bics.ui.schedule.screen.ScheduleListScreen
 import com.example.bics.ui.user.screen.ChangeEmailScreen
 import com.example.bics.ui.user.screen.ChangePasswordScreen
 import com.example.bics.ui.user.screen.ConfirmPasswordScreen
@@ -179,6 +180,12 @@ fun MainApp() {
             }
             composable(route = AppScreen.ChangeEmail.name) {
                 ChangeEmailScreen(navController)
+            }
+            composable(route = AppScreen.ScheduleList.name) {
+                ScheduleListScreen(navController)
+            }
+            composable(route = AppScreen.FilterSchedule.name) {
+
             }
         }
     }

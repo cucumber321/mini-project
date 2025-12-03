@@ -14,9 +14,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
+import okhttp3.internal.format
 
 class FirestoreProfileRepository: ProfileRepository {
     private val firestore = Firebase.firestore.collection(FirestoreUserField.Collection.key)
+    private val userMapCollection = Firebase.firestore.collection("user_map")
 
     private var storageRef = Firebase.storage.reference
 
@@ -62,15 +64,20 @@ class FirestoreProfileRepository: ProfileRepository {
         stopObserveUser()
         if (uid.isEmpty()) {
             _profile.update { UserProfile() }
-        } else{
-            firestore.document(uid).get().addOnSuccessListener { doc ->
-                if (doc.exists())
-                    updateProfileFromDoc(doc)
-                else {
-                    insertUser(UserProfile(uid))
+        } else {
+            userMapCollection.document(uid).get().addOnSuccessListener { doc ->
+                if (doc.exists()) {
+                    val userID = doc.getString("user_id")?: ""
+                    firestore.document(userID).get().addOnSuccessListener { doc2 ->
+                        if (doc2.exists())
+                            updateProfileFromDoc(doc2)
+                        else {
+                            insertUser(UserProfile(userID))
+                        }
+                        _profile.update { it.copy(uid = userID, email = email) }
+                        startObserveUser()
+                    }
                 }
-                _profile.update { it.copy(uid = uid, email = email) }
-                startObserveUser()
             }
         }
     }
@@ -82,7 +89,6 @@ class FirestoreProfileRepository: ProfileRepository {
                 hashMapOf(
                     FirestoreUserField.Username.key to profile.username,
                     FirestoreUserField.ProfilePicture.key to profile.profilePictureUri,
-                    FirestoreUserField.Balance.key to profile.balance
                     )
             )
     }
@@ -94,8 +100,17 @@ class FirestoreProfileRepository: ProfileRepository {
             uid = uid,
             username = doc.getString(FirestoreUserField.Username.key)?: FirestoreUserField.Username.default as String,
             profilePictureUri = doc.getString(FirestoreUserField.ProfilePicture.key)?.toUri() ?: FirestoreUserField.ProfilePicture.default as Uri,
-            balance = doc.getDouble(FirestoreUserField.Balance.key) ?: FirestoreUserField.Balance.default as Double
         )
+    }
+
+    override suspend fun addUuidToMap(uid: String): String {
+        val doc = firestore.document(FirestoreUserField.Counter.key).get().await()
+        val displayID = (doc.getDouble(FirestoreUserField.LastID.key) ?: FirestoreUserField.DisplayID.default as Double).toInt()
+        userMapCollection.document(uid).set(mapOf("user_id" to format("U%03d", displayID)))
+        firestore.document(FirestoreUserField.Counter.key)
+            .update(mapOf(FirestoreUserField.LastID.key to displayID + 1))
+            .await()
+        return format("U%03d", displayID)
     }
 
     private fun startObserveUser() {
@@ -115,8 +130,6 @@ class FirestoreProfileRepository: ProfileRepository {
             it.copy(
                 username = doc.getString(FirestoreUserField.Username.key)?: FirestoreUserField.Username.default as String,
                 profilePictureUri = doc.getString(FirestoreUserField.ProfilePicture.key)?.toUri() ?: FirestoreUserField.ProfilePicture.default as Uri,
-                balance = doc.getDouble(FirestoreUserField.Balance.key) ?: FirestoreUserField.Balance.default as Double,
-                isAdmin = doc.getBoolean("isAdmin") ?: false
             )
         }
     }
