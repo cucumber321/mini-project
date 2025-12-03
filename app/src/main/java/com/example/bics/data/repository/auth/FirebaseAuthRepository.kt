@@ -1,6 +1,5 @@
 package com.example.bics.data.repository.auth
 
-import android.util.Log
 import com.example.bics.data.repository.profile.ProfileRepository
 import com.example.bics.data.user.ErrorCode
 import com.example.bics.data.user.UserProfile
@@ -16,8 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 
-class FirebaseAuthRepository(private val profileRepository: ProfileRepository):
-    AuthRepository {
+class FirebaseAuthRepository(private val profileRepository: ProfileRepository): AuthRepository {
     private val auth = Firebase.auth
 
     private val _user = MutableStateFlow(auth.currentUser)
@@ -72,14 +70,14 @@ class FirebaseAuthRepository(private val profileRepository: ProfileRepository):
         password: String
     ): ErrorCode {
         return try {
-            auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-                val currentUser = auth.currentUser
-                if (currentUser != null) {
-                    profileRepository.insertUser(UserProfile(uid = currentUser.uid, username = username))
-                    currentUser.sendEmailVerification()
-                    logout()
-                }
-            }.await()
+            auth.createUserWithEmailAndPassword(email, password).await()
+            val currentUser = auth.currentUser
+            if (currentUser != null) {
+                val uid = profileRepository.addUuidToMap(currentUser.uid)
+                profileRepository.insertUser(UserProfile(uid = uid, username = username))
+                currentUser.sendEmailVerification()
+                logout()
+            }
             ErrorCode.None
         } catch (e: Exception) {
             ErrorCode.processException(e)

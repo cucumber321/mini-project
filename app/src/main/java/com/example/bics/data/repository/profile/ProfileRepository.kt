@@ -18,4 +18,5 @@ interface ProfileRepository {
 
     fun insertUser(profile: UserProfile)
     suspend fun getUser(uid: String): UserProfile
+    suspend fun addUuidToMap(uid: String): String
 }
