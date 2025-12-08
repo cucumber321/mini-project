@@ -40,13 +40,13 @@ fun LoginScreen(navController: NavController) {
 
     fun onSubmit() {
         coroutineScope.launch {
-            loginViewModel.onSubmit {
+            loginViewModel.onSubmit({
                 Toast.makeText(
                     context,
                     context.resources.getString(R.string.login_success),
                     Toast.LENGTH_SHORT
                 ).show()
-            }
+            })
         }
     }
 

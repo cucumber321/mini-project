@@ -36,9 +36,9 @@ fun ConfirmPasswordScreen(navController: NavController) {
 
     fun onSubmit() {
         coroutineScope.launch {
-            confirmPasswordViewModel.onSubmit {
+            confirmPasswordViewModel.onSubmit({
                 navController.navigate(AppScreen.SecuritySettings.name) {popUpTo(AppScreen.ConfirmPassword.name) { inclusive = true }}
-            }
+            })
         }
     }
 

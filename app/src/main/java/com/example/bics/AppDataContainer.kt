@@ -20,6 +20,6 @@ class AppDataContainer() : AppContainer {
         FirebaseAuthRepository(profileRepository)
     }
     override val scheduleRepository: ScheduleRepository by lazy {
-        ScheduleRepository(profileRepository)
+        ScheduleRepository()
     }
 }

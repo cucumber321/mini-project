@@ -6,14 +6,14 @@ import com.example.bics.data.user.FieldUiStateWrapper
 import com.example.bics.data.user.ErrorCode
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class LoginViewModel(private val authRepository: AuthRepository): FormViewModel() {
-    private val _emailUiState = MutableStateFlow(FieldUiState())
-    private val _passwordUiState = MutableStateFlow(FieldUiState())
+class LoginViewModel(private val authRepository: AuthRepository): UserFormViewModel() {
+    private val _emailUiState = MutableStateFlow(FieldUiState(""))
+    private val _passwordUiState = MutableStateFlow(FieldUiState(""))
 
     val emailUiState = FieldUiStateWrapper(_emailUiState)
     val passwordUiState = FieldUiStateWrapper(_passwordUiState)
 
-    override suspend fun onSubmit(onSuccess: () -> Unit) {
+    override suspend fun onSubmit(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         if (validateAllFields()) {
             _available.value = false
             processErrorCode(

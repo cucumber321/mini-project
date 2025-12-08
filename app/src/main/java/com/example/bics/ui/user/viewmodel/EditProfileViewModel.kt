@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class EditProfileViewModel(private val authRepository: AuthRepository, private val profileRepository: ProfileRepository): FormViewModel() {
-    private val _usernameUiState = MutableStateFlow(FieldUiState())
+class EditProfileViewModel(private val authRepository: AuthRepository, private val profileRepository: ProfileRepository): UserFormViewModel() {
+    private val _usernameUiState = MutableStateFlow(FieldUiState(""))
     private var _selectedImageUri: MutableStateFlow<Uri>
 
     private val profile = profileRepository.getUserStream()
@@ -37,7 +37,7 @@ class EditProfileViewModel(private val authRepository: AuthRepository, private v
         }
     }
 
-    override suspend fun onSubmit(onSuccess: () -> Unit) = coroutineScope {
+    override suspend fun onSubmit(onSuccess: () -> Unit, onFailure: (String) -> Unit) = coroutineScope {
         if (validateAllFields()) {
             _available.value = false
             if (authRepository.refresh()) {

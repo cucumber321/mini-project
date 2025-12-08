@@ -40,14 +40,14 @@ fun ChangePasswordScreen(navController: NavController) {
     fun onSubmit() {
         coroutineScope.launch {
             val entry = navController.currentBackStackEntry
-            changePasswordViewModel.onSubmit {
+            changePasswordViewModel.onSubmit({
                 Toast.makeText(
                     context,
                     context.resources.getString(R.string.change_password_success),
                     Toast.LENGTH_SHORT
                 ).show()
                 if (entry == navController.currentBackStackEntry) navController.navigateUp()
-            }
+            })
         }
     }
 

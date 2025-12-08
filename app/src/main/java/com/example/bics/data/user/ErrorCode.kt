@@ -21,7 +21,11 @@ enum class ErrorCode(@StringRes val errorMessage: Int) {
     UserDisabled(errorMessage = R.string.error_message_user_disabled),
     SameEmail(errorMessage = R.string.error_message_same_email),
     UnverifiedEmail(errorMessage = R.string.error_message_unverified_email),
-    EmailChanged(errorMessage = R.string.error_message_email_changed);
+    EmailChanged(errorMessage = R.string.error_message_email_changed),
+    EmptyTitle(errorMessage = R.string.error_message_empty_title),
+    EmptyDate(errorMessage = R.string.error_message_empty_date),
+    InvalidTimeRange(errorMessage = R.string.error_message_invalid_time_range),
+    NoUsers(errorMessage = R.string.error_message_no_users);
 
     companion object {
         fun processException(exception: Exception): ErrorCode {

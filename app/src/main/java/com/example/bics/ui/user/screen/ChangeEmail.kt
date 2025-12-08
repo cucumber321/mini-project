@@ -34,11 +34,11 @@ fun ChangeEmailScreen(navController: NavController) {
     fun onSubmit() {
         coroutineScope.launch {
             val entry = navController.currentBackStackEntry
-            changeEmailViewModel.onSubmit {
+            changeEmailViewModel.onSubmit({
                 navController.navigate("${AppScreen.Success.name}/${R.string.change_email_success}") {
                     if (entry == navController.currentBackStackEntry) popUpTo(AppScreen.SecuritySettings.name) {inclusive = false}
                 }
-            }
+            })
         }
     }
 

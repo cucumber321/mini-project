@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.konan.util.defaultTargetSubstitutions
 
 plugins {
     alias(libs.plugins.android.application)
@@ -7,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     id("com.google.gms.google-services")
+    id("kotlin-parcelize")
 }
 
 android {

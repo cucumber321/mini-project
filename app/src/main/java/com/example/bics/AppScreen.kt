@@ -36,7 +36,14 @@ import com.example.bics.ui.theme.BICSTheme
 import com.example.bics.ui.user.ErrorCodeLaunchedEffect
 import com.example.bics.data.AppScreen
 import com.example.bics.ui.home.HomeScreen
+import com.example.bics.ui.schedule.screen.AddEditShiftScreen
+import com.example.bics.ui.schedule.screen.FilterScheduleScreen
+import com.example.bics.ui.schedule.screen.ShiftDetailsScreen
 import com.example.bics.ui.schedule.screen.ScheduleListScreen
+import com.example.bics.ui.schedule.screen.SelectUsersScreen
+import com.example.bics.ui.schedule.viewmodel.AddShiftViewModel
+import com.example.bics.ui.schedule.viewmodel.EditShiftViewModel
+import com.example.bics.ui.schedule.viewmodel.ScheduleViewModelProvider
 import com.example.bics.ui.user.screen.ChangeEmailScreen
 import com.example.bics.ui.user.screen.ChangePasswordScreen
 import com.example.bics.ui.user.screen.ConfirmPasswordScreen
@@ -181,10 +188,34 @@ fun MainApp() {
             composable(route = AppScreen.ChangeEmail.name) {
                 ChangeEmailScreen(navController)
             }
-            composable(route = AppScreen.ScheduleList.name) {
+            composable(route = AppScreen.ScheduleList.name) { entry ->
                 ScheduleListScreen(navController)
             }
             composable(route = AppScreen.FilterSchedule.name) {
+                FilterScheduleScreen(navController)
+            }
+            composable(route = AppScreen.SelectUsers.name) {
+                SelectUsersScreen(navController)
+            }
+            composable(route = AppScreen.AddShift.name) {
+                val viewModel: AddShiftViewModel = viewModel(factory = ScheduleViewModelProvider.Factory)
+                AddEditShiftScreen(navController, viewModel, "Add")
+            }
+            composable(route = AppScreen.EditShift.name) {
+                val viewModel: EditShiftViewModel = viewModel(factory = ScheduleViewModelProvider.Factory)
+                AddEditShiftScreen(navController, viewModel, "Edit")
+            }
+            composable(route = "${AppScreen.ShiftDetails.name}/{shiftID}",
+                arguments = listOf(
+                    navArgument("shiftID") {type = NavType.StringType},
+                )
+            ) { backStackEntry ->
+
+                val shiftID = backStackEntry.arguments?.getString("shiftID")
+                if (shiftID == null) navController.navigateUp()
+                else {
+                    ShiftDetailsScreen(navController, shiftID)
+                }
 
             }
         }

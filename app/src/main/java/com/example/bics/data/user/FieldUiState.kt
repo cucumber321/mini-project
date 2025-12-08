@@ -4,21 +4,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-data class FieldUiState (
-    val fieldInput: String = "",
+data class FieldUiState<T> (
+    val fieldInput: T,
     val errorCode: ErrorCode = ErrorCode.None,
 )
 
-data class FieldUiStateWrapper(
-    private val _uiState: MutableStateFlow<FieldUiState>,
-    private val onFieldValueChanged: (String, MutableStateFlow<FieldUiState>) -> Unit =
+data class FieldUiStateWrapper<T>(
+    private val _uiState: MutableStateFlow<FieldUiState<T>>,
+    private val onFieldValueChanged: (T, MutableStateFlow<FieldUiState<T>>) -> Unit =
         { newValue, stateFlow ->
             stateFlow.update {
-                it.copy(fieldInput = newValue, errorCode = ErrorCode.None)
+                FieldUiState(fieldInput = newValue, errorCode = ErrorCode.None)
             }
         }
 ) {
     val uiState = _uiState.asStateFlow()
     fun value() = _uiState.value.fieldInput
-    fun onValueChanged(newValue: String) = onFieldValueChanged(newValue, _uiState)
+    fun onValueChanged(newValue: T) = onFieldValueChanged(newValue, _uiState)
 }

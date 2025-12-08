@@ -119,13 +119,14 @@ fun UserTextBox(
     enabled: Boolean = true,
     trailingIcon: @Composable () -> Unit = {},
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    maxLines: Int = 1
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = {Text(text = upperLabel)},
         placeholder = { Text(text = placeholder, color = if (isError) MaterialTheme.colorScheme.error else Color.Unspecified) },
-        singleLine = true,
+        singleLine = maxLines == 1,
         isError = isError,
         supportingText = {
             Text(
@@ -140,6 +141,7 @@ fun UserTextBox(
         keyboardActions = keyboardActions,
         enabled = enabled,
         keyboardOptions = keyboardOptions,
+        maxLines = maxLines,
         modifier = modifier
     )
 }
@@ -179,7 +181,7 @@ fun ThickButton(
 
 @Composable
 fun UsernameTextBox(
-    wrapper: FieldUiStateWrapper,
+    wrapper: FieldUiStateWrapper<String>,
     enabled: Boolean,
     imeAction: ImeAction = ImeAction.Unspecified,
     keyboardActions: KeyboardActions = KeyboardActions.Default
@@ -201,7 +203,7 @@ fun UsernameTextBox(
 
 @Composable
 fun EmailTextBox(
-    wrapper: FieldUiStateWrapper,
+    wrapper: FieldUiStateWrapper<String>,
     enabled: Boolean,
     @StringRes title: Int = R.string.email,
     imeAction: ImeAction = ImeAction.Unspecified,
@@ -242,7 +244,7 @@ fun EmailTextBox(
 
 @Composable
 fun PasswordTextBox(
-    wrapper: FieldUiStateWrapper,
+    wrapper: FieldUiStateWrapper<String>,
     enabled: Boolean,
     imeAction: ImeAction = ImeAction.Unspecified,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -287,28 +289,6 @@ fun ShowHideButton(showPassword: Boolean, enabled: Boolean, onButtonPressed: () 
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
         )
     }
-}
-
-@Composable
-fun CustomUserTextBox(
-    wrapper: FieldUiStateWrapper,
-    title: String,
-    keyboardType: KeyboardType,
-    imeAction: ImeAction = ImeAction.Unspecified,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    enabled: Boolean
-) {
-    val uiState by wrapper.uiState.collectAsState()
-    UserTextBox(
-        upperLabel = title,
-        keyboardActions = keyboardActions,
-        keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
-        value = uiState.fieldInput,
-        errorMessage = stringResource(uiState.errorCode.errorMessage),
-        onValueChange = wrapper::onValueChanged,
-        isError = uiState.errorCode != ErrorCode.None,
-        enabled = enabled
-    )
 }
 
 @Composable

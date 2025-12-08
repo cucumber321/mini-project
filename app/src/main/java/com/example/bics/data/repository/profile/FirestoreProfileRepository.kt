@@ -6,6 +6,7 @@ import com.example.bics.data.user.FirestoreUserField
 import com.example.bics.data.user.UserProfile
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
@@ -31,6 +32,9 @@ class FirestoreProfileRepository: ProfileRepository {
         return profile
     }
 
+    override suspend fun getUserList(): List<UserProfile> {
+        return firestore.orderBy(FirestoreUserField.Username.key).get().await().map(::docToUserProfile)
+    }
     override fun updateUser(key: FirestoreUserField, value: Any) {
         firestore
             .document(_profile.value.uid)
@@ -92,24 +96,30 @@ class FirestoreProfileRepository: ProfileRepository {
                     )
             )
     }
-
-    override suspend fun getUser(uid: String): UserProfile {
-        if (uid.isEmpty()) return UserProfile()
-        val doc = firestore.document(uid).get().await()
+    fun docToUserProfile(doc: DocumentSnapshot): UserProfile {
         return UserProfile(
-            uid = uid,
+            uid = doc.id,
             username = doc.getString(FirestoreUserField.Username.key)?: FirestoreUserField.Username.default as String,
             profilePictureUri = doc.getString(FirestoreUserField.ProfilePicture.key)?.toUri() ?: FirestoreUserField.ProfilePicture.default as Uri,
         )
     }
 
+    override suspend fun getUser(uid: String): UserProfile {
+        val doc = firestore.document(uid).get().await()
+        return docToUserProfile(doc)
+    }
+
+    override suspend fun getUsers(uids: List<String>): List<UserProfile> {
+        return uids.chunked(10).flatMap {
+            firestore.whereIn(FieldPath.documentId(), it).get().await().map(::docToUserProfile)
+        }.sortedBy { it.username }
+    }
+
     override suspend fun addUuidToMap(uid: String): String {
         val doc = firestore.document(FirestoreUserField.Counter.key).get().await()
-        val displayID = (doc.getDouble(FirestoreUserField.LastID.key) ?: FirestoreUserField.DisplayID.default as Double).toInt()
+        val displayID = (doc.getLong(FirestoreUserField.LastID.key) ?: FirestoreUserField.DisplayID.default as Long)
         userMapCollection.document(uid).set(mapOf("user_id" to format("U%03d", displayID)))
-        firestore.document(FirestoreUserField.Counter.key)
-            .update(mapOf(FirestoreUserField.LastID.key to displayID + 1))
-            .await()
+        firestore.document(FirestoreUserField.Counter.key).update(mapOf(FirestoreUserField.LastID.key to displayID + 1))
         return format("U%03d", displayID)
     }
 

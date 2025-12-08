@@ -7,8 +7,8 @@ import com.example.bics.data.user.FieldUiStateWrapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
-class ForgotPasswordViewModel(private val authRepository: AuthRepository): FormViewModel() {
-    private val _emailUiState = MutableStateFlow(FieldUiState())
+class ForgotPasswordViewModel(private val authRepository: AuthRepository): UserFormViewModel() {
+    private val _emailUiState = MutableStateFlow(FieldUiState(""))
     private val isLoggedIn = authRepository.isLoggedIn()
 
     val user = authRepository.getUserStream().value
@@ -21,7 +21,7 @@ class ForgotPasswordViewModel(private val authRepository: AuthRepository): FormV
         }
     }
 
-    override suspend fun onSubmit(onSuccess: () -> Unit) {
+    override suspend fun onSubmit(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         if (validateAllFields()) {
             _available.value = false
             if (!isLoggedIn || authRepository.refresh()) {

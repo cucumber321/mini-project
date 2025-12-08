@@ -41,11 +41,11 @@ fun ForgotPasswordScreen(navController: NavController) {
     fun onSubmit() {
         coroutineScope.launch {
             val entry = navController.currentBackStackEntry
-            forgotPasswordViewModel.onSubmit {
+            forgotPasswordViewModel.onSubmit({
                 navController.navigate("${AppScreen.Success.name}/${R.string.forgot_password_success}") {
                     if (entry == navController.currentBackStackEntry) popUpTo(AppScreen.ForgotPassword.name) {inclusive = true}
                 }
-            }
+            })
         }
     }
 

@@ -13,7 +13,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -23,7 +26,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.bics.R
 import com.example.bics.data.AppScreen
-import com.example.bics.ui.schedule.CustomTimePicker
+import com.example.bics.ui.schedule.CustomDatePicker
+import com.example.bics.ui.schedule.CustomFloatingButton
 import com.example.bics.ui.schedule.ShiftBox
 import com.example.bics.ui.schedule.viewmodel.ScheduleListViewModel
 import com.example.bics.ui.schedule.viewmodel.ScheduleViewModelProvider
@@ -35,8 +39,12 @@ fun ScheduleListScreen(
     navController: NavController
 ) {
     val scheduleListViewModel: ScheduleListViewModel = viewModel(factory = ScheduleViewModelProvider.Factory)
-    val selectedDate by scheduleListViewModel.scheduleDate.collectAsState()
     val shifts by scheduleListViewModel.shifts.collectAsState()
+    val isRefreshing by scheduleListViewModel.isRefreshing.collectAsState()
+
+    LaunchedEffect(Unit) {
+        scheduleListViewModel.refresh()
+    }
 
     Scaffold(
         topBar = {
@@ -48,29 +56,42 @@ fun ScheduleListScreen(
         }
     ) { innerPadding ->
         Surface(modifier = Modifier.padding(innerPadding)) {
-
-            Column(
-                modifier = Modifier.padding(16.dp)
+            PullToRefreshBox(
+                state = rememberPullToRefreshState(),
+                isRefreshing = isRefreshing,
+                onRefresh = scheduleListViewModel::refresh
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.padding(16.dp)
                 ) {
-                    CustomTimePicker(selectedDate) {
-                        timeMillis -> timeMillis?.let { scheduleListViewModel.onDateSelected(it) }
-                    }
-                    IconButton(
-                        onClick = {navController.navigate(AppScreen.FilterSchedule.name) {launchSingleTop = true} }
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(painter = painterResource(R.drawable.filter), contentDescription = "Filter", modifier = Modifier.size(24.dp))
-                    }
-                }
-                LazyColumn {
-                    items(shifts) {
-                        ShiftBox(it) {
-
+                        CustomDatePicker {
+                            instant -> instant?.let { scheduleListViewModel.onDateSelected(it) }
+                        }
+                        IconButton(
+                            onClick = {
+                                navController.navigate(AppScreen.FilterSchedule.name) {launchSingleTop = true}
+                            }
+                        ) {
+                            Icon(painter = painterResource(R.drawable.filter), contentDescription = "Filter", modifier = Modifier.size(24.dp))
                         }
                     }
+                    LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        items(shifts) {
+                            val shift by it.collectAsState()
+                            ShiftBox(shift) {
+                                navController.navigate("${AppScreen.ShiftDetails.name}/${shift.shiftID}") { launchSingleTop = true }
+                            }
+                        }
+                    }
+                }
+
+                CustomFloatingButton(R.drawable.add) {
+                    navController.navigate(AppScreen.AddShift.name) { launchSingleTop = true }
                 }
             }
         }

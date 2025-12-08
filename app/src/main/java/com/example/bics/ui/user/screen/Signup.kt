@@ -43,14 +43,14 @@ fun SignupScreen(navController: NavController) {
     fun onSubmit() {
         coroutineScope.launch {
             val entry = navController.currentBackStackEntry
-            signupViewModel.onSubmit {
+            signupViewModel.onSubmit({
                 Toast.makeText(
                     context,
                     context.resources.getString(R.string.signup_success),
                     Toast.LENGTH_SHORT
                 ).show()
                 if (entry == navController.currentBackStackEntry) navController.navigateUp()
-            }
+            })
         }
     }
 

@@ -51,14 +51,14 @@ fun EditProfileScreen(navController: NavController) {
     fun onSubmit() {
         val entry = navController.currentBackStackEntry
         coroutineScope.launch {
-            editProfileViewModel.onSubmit {
+            editProfileViewModel.onSubmit({
                 Toast.makeText(
                     context,
                     context.resources.getString(R.string.edit_profile_success),
                     Toast.LENGTH_SHORT
                 ).show()
                 if (entry == navController.currentBackStackEntry) navController.navigateUp()
-            }
+            })
         }
     }
 

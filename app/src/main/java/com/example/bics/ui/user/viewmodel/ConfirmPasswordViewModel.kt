@@ -6,12 +6,12 @@ import com.example.bics.data.user.FieldUiState
 import com.example.bics.data.user.FieldUiStateWrapper
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class ConfirmPasswordViewModel(private val authRepository: AuthRepository): FormViewModel() {
-    private val _passwordUiState = MutableStateFlow(FieldUiState())
+class ConfirmPasswordViewModel(private val authRepository: AuthRepository): UserFormViewModel() {
+    private val _passwordUiState = MutableStateFlow(FieldUiState(""))
 
     val passwordUiState = FieldUiStateWrapper(_passwordUiState)
 
-    override suspend fun onSubmit(onSuccess: () -> Unit) {
+    override suspend fun onSubmit(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         if (validateAllFields()) {
             _available.value = false
             if (authRepository.refresh()) {

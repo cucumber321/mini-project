@@ -15,4 +15,8 @@ enum class AppScreen {
     Success,
     ScheduleList,
     FilterSchedule,
+    SelectUsers,
+    AddShift,
+    EditShift,
+    ShiftDetails
 }

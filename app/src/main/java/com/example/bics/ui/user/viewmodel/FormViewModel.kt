@@ -1,6 +1,5 @@
 package com.example.bics.ui.user.viewmodel
 
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bics.data.user.ErrorCode
@@ -12,8 +11,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
-abstract class FormViewModel: ViewModel() {
-
+abstract class FormViewModel(): ViewModel() {
     protected var _available = MutableStateFlow(true)
     protected var _error = MutableStateFlow(ErrorCode.None)
 
@@ -29,85 +27,19 @@ abstract class FormViewModel: ViewModel() {
         }.launchIn(viewModelScope)
     }
 
-    protected fun validateEmail(uiState: MutableStateFlow<FieldUiState>): Boolean {
-        uiState.update {
-            it.copy(errorCode =
-                if (uiState.value.fieldInput.isBlank())
-                    ErrorCode.EmptyEmail
-                else if (!Patterns.EMAIL_ADDRESS.matcher(uiState.value.fieldInput).matches())
-                    ErrorCode.InvalidEmailFormat
-                else
-                    ErrorCode.None
-            )
-        }
-        return uiState.value.errorCode == ErrorCode.None
-    }
-
     protected fun validateBasicField(
-        uiState: MutableStateFlow<FieldUiState>,
+        uiState: MutableStateFlow<FieldUiState<String>>,
         errorCode: ErrorCode,
     ): Boolean {
         uiState.update {
             it.copy(errorCode =
                 if (uiState.value.fieldInput.isBlank())
-                     errorCode
+                    errorCode
                 else
                     ErrorCode.None
             )
         }
         return uiState.value.errorCode == ErrorCode.None
-    }
-    protected fun validatePasswordField(passwordUiState: MutableStateFlow<FieldUiState>): Boolean {
-        passwordUiState.update {
-            it.copy(errorCode =
-                when {
-                    passwordUiState.value.fieldInput.isBlank() -> ErrorCode.EmptyPassword
-                    passwordUiState.value.fieldInput.length < 6 -> ErrorCode.WeakPassword
-                    else -> ErrorCode.None
-                }
-            )
-        }
-        return passwordUiState.value.errorCode == ErrorCode.None
-    }
-
-    protected fun validateConfirmPassword(
-        passwordUiState: MutableStateFlow<FieldUiState>,
-        confirmPasswordUiState: MutableStateFlow<FieldUiState>,
-    ): Boolean {
-        confirmPasswordUiState.update {
-            it.copy(
-                errorCode = if (passwordUiState.value.fieldInput != confirmPasswordUiState.value.fieldInput) {
-                    if (passwordUiState.value.errorCode == ErrorCode.None) {
-                        passwordUiState.update { state ->
-                            state.copy(errorCode = ErrorCode.DifferentPassword)
-                        }
-                    }
-                    ErrorCode.DifferentPassword
-                } else
-                    ErrorCode.None
-            )
-        }
-        return confirmPasswordUiState.value.errorCode == ErrorCode.None
-    }
-
-    protected fun processEmailErrorCode(
-        emailUiState: MutableStateFlow<FieldUiState>,
-        errorCode: ErrorCode
-    ) {
-        if (errorCode in listOf(ErrorCode.EmailInUse, ErrorCode.InvalidCredentials, ErrorCode.InvalidEmailFormat, ErrorCode.SameEmail))
-            emailUiState.update {
-                it.copy(errorCode = errorCode)
-            }
-    }
-
-    protected fun processPasswordErrorCode(
-        passwordUiState: MutableStateFlow<FieldUiState>,
-        errorCode: ErrorCode
-    ) {
-        if (errorCode in listOf(ErrorCode.InvalidCredentials, ErrorCode.WeakPassword))
-            passwordUiState.update {
-                it.copy(errorCode = errorCode)
-            }
     }
 
     protected fun processErrorCode(errorCode: ErrorCode, onSuccess: () -> Unit = {}) {
@@ -118,9 +50,8 @@ abstract class FormViewModel: ViewModel() {
         }
     }
 
-    abstract suspend fun onSubmit(onSuccess: () -> Unit = {})
+    abstract suspend fun onSubmit(onSuccess: () -> Unit = {}, onFailure: (String) -> Unit = {})
 
     abstract fun validateAllFields(): Boolean
-
     abstract fun processFieldErrorCode(errorCode: ErrorCode)
 }

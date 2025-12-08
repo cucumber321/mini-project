@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface ProfileRepository {
     fun getUserStream(): StateFlow<UserProfile>
+    suspend fun getUserList(): List<UserProfile>
 
     fun updateUser(key: FirestoreUserField, value: Any)
 
@@ -18,5 +19,6 @@ interface ProfileRepository {
 
     fun insertUser(profile: UserProfile)
     suspend fun getUser(uid: String): UserProfile
+    suspend fun getUsers(uids: List<String>): List<UserProfile>
     suspend fun addUuidToMap(uid: String): String
 }
