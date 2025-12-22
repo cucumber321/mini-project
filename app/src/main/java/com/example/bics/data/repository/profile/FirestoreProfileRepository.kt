@@ -112,7 +112,7 @@ class FirestoreProfileRepository: ProfileRepository {
     override suspend fun getUsers(uids: List<String>): List<UserProfile> {
         return uids.chunked(10).flatMap {
             firestore.whereIn(FieldPath.documentId(), it).get().await().map(::docToUserProfile)
-        }.sortedBy { it.username }
+        }
     }
 
     override suspend fun addUuidToMap(uid: String): String {

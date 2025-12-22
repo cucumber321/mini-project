@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
-class FilterScheduleViewModel(private val scheduleRepository: ScheduleRepository, profileRepository: ProfileRepository): ViewModel() {
+class FilterScheduleViewModel(private val scheduleRepository: ScheduleRepository, private val profileRepository: ProfileRepository): ViewModel() {
     private val filterSettings = scheduleRepository
         .state[scheduleRepository.state.lastIndex - 1]
         .getMutableStateFlow(ScheduleStateKeys.FilterSettings.key, ScheduleFilterSettings())
@@ -28,7 +28,7 @@ class FilterScheduleViewModel(private val scheduleRepository: ScheduleRepository
 
     init {
         tempUids.onEach { uidList ->
-            _users.update {profileRepository.getUsers(uidList)}
+            _users.update {profileRepository.getUsers(uidList).sortedBy { it.username }}
         }.launchIn(viewModelScope)
     }
 
@@ -49,5 +49,10 @@ class FilterScheduleViewModel(private val scheduleRepository: ScheduleRepository
 
     fun onIncludeAllSelected(value: Boolean) {
         _includeAll.update { value }
+    }
+
+    fun reset() {
+        tempUids.update { listOf(profileRepository.getUserStream().value.uid) }
+        _includeAll.update { false }
     }
 }

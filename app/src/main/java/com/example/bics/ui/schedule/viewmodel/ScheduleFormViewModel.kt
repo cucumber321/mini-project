@@ -41,7 +41,7 @@ abstract class ScheduleFormViewModel(private val scheduleRepository: ScheduleRep
 
     init {
         uids.onEach { uids ->
-            usersUiState.onValueChanged(profileRepository.getUsers(uids))
+            usersUiState.onValueChanged(profileRepository.getUsers(uids).sortedBy { it.username })
             users.update { it.copy(errorCode = ErrorCode.None) }
         }.launchIn(viewModelScope)
     }

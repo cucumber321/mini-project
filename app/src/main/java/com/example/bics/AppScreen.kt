@@ -35,6 +35,14 @@ import androidx.navigation.navArgument
 import com.example.bics.ui.theme.BICSTheme
 import com.example.bics.ui.user.ErrorCodeLaunchedEffect
 import com.example.bics.data.AppScreen
+import com.example.bics.ui.dispatch.screen.AddEditDispatchScreen
+import com.example.bics.ui.dispatch.screen.DispatchDetailsScreen
+import com.example.bics.ui.dispatch.screen.DispatchListScreen
+import com.example.bics.ui.dispatch.screen.FilterDispatchScreen
+import com.example.bics.ui.dispatch.screen.SelectDispatchProductsScreen
+import com.example.bics.ui.dispatch.viewmodel.AddDispatchViewModel
+import com.example.bics.ui.dispatch.viewmodel.DispatchViewModelProvider
+import com.example.bics.ui.dispatch.viewmodel.EditDispatchViewModel
 import com.example.bics.ui.home.HomeScreen
 import com.example.bics.ui.schedule.screen.AddEditShiftScreen
 import com.example.bics.ui.schedule.screen.FilterScheduleScreen
@@ -57,6 +65,13 @@ import com.example.bics.ui.user.screen.SuccessScreen
 import com.example.bics.ui.user.screen.UserMenuScreen
 import com.example.bics.ui.user.viewmodel.AuthViewModel
 import com.example.bics.ui.user.viewmodel.UserViewModelProvider
+import com.example.bics.ui.product.screen.EditProductScreen
+import com.example.bics.ui.product.screen.ProductListScreen
+import com.example.bics.ui.product.screen.ProductScreen
+import com.example.bics.ui.product.screen.ViewProductScreen
+import com.example.bics.ui.product.viewmodel.ProductViewModel
+import com.example.bics.ui.product.viewmodel.ProductViewModelProvider
+import com.example.bics.ui.report.Report
 
 @SuppressLint("LocalContextResourcesRead")
 @ExperimentalMaterial3Api
@@ -183,7 +198,7 @@ fun MainApp() {
             composable(route = AppScreen.Home.name,
                 enterTransition = { EnterTransition.None }
             ) {
-                HomeScreen(navController, authViewModel)
+                HomeScreen(navController)
             }
             composable(route = AppScreen.ChangeEmail.name) {
                 ChangeEmailScreen(navController)
@@ -217,6 +232,82 @@ fun MainApp() {
                     ShiftDetailsScreen(navController, shiftID)
                 }
 
+            }
+            composable(AppScreen.ProductList.name) {
+                ProductListScreen(
+                    onAddClick = { navController.navigate(AppScreen.AddProduct.name) { launchSingleTop = true } },
+                    onItemClick = { id -> navController.navigate("${AppScreen.ViewProduct.name}/$id") { launchSingleTop = true } },
+                    onBackButtonClick = navController::navigateUp
+                )
+            }
+
+            composable(AppScreen.AddProduct.name) { backStack ->
+                val viewModel: ProductViewModel = viewModel(factory = ProductViewModelProvider.Factory)
+
+                ProductScreen(
+                    onCancel = navController::navigateUp,
+                    viewModel = viewModel,
+                    title = "Add Product"
+                )
+            }
+
+            composable("${AppScreen.ViewProduct.name}/{id}") { backStack ->
+                val id = backStack.arguments?.getString("id") ?: ""
+                val back: () -> Unit = {
+                    navController.currentBackStackEntry?.let{
+                        if (it == backStack) navController.navigateUp()
+                    }
+                }
+                ViewProductScreen(
+                    productId = id,
+                    onEdit = { navController.navigate("${AppScreen.EditProduct.name}/$id") { launchSingleTop = true } },
+                    onDelete = back,
+                    onCancel = back,
+                    onBack = back
+                )
+            }
+
+            composable("${AppScreen.EditProduct.name}/{id}") { backStack ->
+                val id = backStack.arguments?.getString("id") ?: ""
+                val back: () -> Unit = {
+                    navController.currentBackStackEntry?.let{
+                        if (it == backStack) navController.navigateUp()
+                    }
+                }
+                EditProductScreen(
+                    productId = id,
+                    onCancel = back
+                )
+            }
+            composable(route = AppScreen.Report.name) {
+                Report(navController::navigateUp)
+            }
+            composable(route = AppScreen.FilterDispatch.name) {
+                FilterDispatchScreen(navController)
+            }
+            composable(route = AppScreen.DispatchList.name) {
+                DispatchListScreen(navController)
+            }
+            composable(route = AppScreen.AddDispatch.name) {
+                val viewModel: AddDispatchViewModel = viewModel(factory = DispatchViewModelProvider.Factory)
+                AddEditDispatchScreen(navController, "Add", viewModel)
+            }
+            composable(route = AppScreen.EditDispatch.name) {
+                val viewModel: EditDispatchViewModel = viewModel(factory = DispatchViewModelProvider.Factory)
+                AddEditDispatchScreen(navController, "Edit", viewModel)
+            }
+            composable(route = AppScreen.SelectDispatchProducts.name) {
+                SelectDispatchProductsScreen(navController)
+            }
+            composable(route = "${AppScreen.DispatchDetails.name}/{dispatchId}",
+                arguments = listOf(
+                    navArgument("dispatchId") {type = NavType.StringType},
+                )
+            ) { entry ->
+                val dispatchId = entry.arguments?.getString("dispatchId") ?: ""
+                if (dispatchId.isBlank()) navController.navigateUp()
+
+                DispatchDetailsScreen(navController, dispatchId)
             }
         }
     }

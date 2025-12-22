@@ -16,6 +16,7 @@ object ScheduleViewModelProvider {
         }
         initializer {
             val container = this.bicsApplication().container
+            container.scheduleRepository.state.add(this.createSavedStateHandle())
             HomeViewModel(container.scheduleRepository, container.profileRepository)
         }
         initializer {

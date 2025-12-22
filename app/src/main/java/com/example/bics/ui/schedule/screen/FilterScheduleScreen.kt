@@ -55,8 +55,8 @@ fun FilterScheduleScreen(navController: NavController) {
                     navController.navigateUp()
                 },
                 topButtonText = "Apply",
-                onBottomButtonPressed = navController::navigateUp,
-                bottomButtonText = "Cancel",
+                onBottomButtonPressed = filterScheduleViewModel::reset,
+                bottomButtonText = "Reset",
                 enabled = true
             )
         },

@@ -6,7 +6,7 @@ import com.example.bics.data.AppScreen
 
 object UserDataSource {
 
-    const val DEFAULT_USERNAME = ""
+    const val DEFAULT_USERNAME = "Unknown User"
     const val CONTACT_PHONE_NUMBER = "+60 11-1444 3997"
     const val CONTACT_EMAIL = "support@inventorycontrolsystem-ffd8f.firebaseapp.com"
     val defaultProfilePicture =

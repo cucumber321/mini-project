@@ -22,7 +22,7 @@ class ScheduleRepository() {
 
         val docs = firestore
                 .whereLessThan(FirestoreScheduleField.StartDate.key, endDate)
-                .whereGreaterThan(FirestoreScheduleField.EndDate.key, startDate)
+                .whereGreaterThanOrEqualTo(FirestoreScheduleField.EndDate.key, startDate)
                 .whereArrayContainsAny(FirestoreScheduleField.UsersAssigned.key, filterSettings.users)
                 .orderBy(FirestoreScheduleField.StartDate.key)
                 .get().await()

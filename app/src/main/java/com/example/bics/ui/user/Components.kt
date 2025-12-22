@@ -67,10 +67,13 @@ fun UserTopBar(
     modifier: Modifier = Modifier,
     title: String = "",
     showBackButton: Boolean = false,
+    showActions: Boolean = false,
     onBackButtonPressed: () -> Unit = {},
+    onActionsPressed: () -> Unit = {},
     @DrawableRes backButtonIcon: Int = R.drawable.arrow_left,
+    @DrawableRes actionsIcon: Int = R.drawable.delete,
     enabled: Boolean = true,
-    scrollBehavior: TopAppBarScrollBehavior? = null
+    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     CenterAlignedTopAppBar(
         scrollBehavior = scrollBehavior,
@@ -86,12 +89,22 @@ fun UserTopBar(
                 )
             }
         },
+        actions = {
+            if (showActions) {
+                BackButton(
+                    onClick = onActionsPressed,
+                    enabled = enabled,
+                    icon = actionsIcon,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        },
         modifier = modifier,
     )
 }
 
 @Composable
-fun BackButton(modifier: Modifier = Modifier, onClick: () -> Unit, enabled: Boolean, @DrawableRes icon: Int) {
+fun BackButton(modifier: Modifier = Modifier, onClick: () -> Unit, enabled: Boolean, @DrawableRes icon: Int, tint: Color = LocalContentColor.current) {
     IconButton(
         onClick = onClick,
         modifier = modifier,
@@ -100,8 +113,9 @@ fun BackButton(modifier: Modifier = Modifier, onClick: () -> Unit, enabled: Bool
         Icon(
             painter = painterResource(icon),
             contentDescription = stringResource(R.string.back_button),
-            modifier = modifier.fillMaxSize(0.8f)
-            )
+            modifier = modifier.fillMaxSize(0.8f),
+            tint = tint
+        )
     }
 }
 

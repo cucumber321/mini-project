@@ -68,7 +68,7 @@ fun SelectUsersScreen(navController: NavController) {
                         .fillMaxWidth()
                         .height(80.dp)
                 ) {
-                    items(chosen) {
+                    items(chosen, { it.uid }) {
                         SelectUserIcon(it, modifier = Modifier.size(64.dp)) {
                             selectUsersViewModel.onRemove(it)
                         }
@@ -79,7 +79,7 @@ fun SelectUsersScreen(navController: NavController) {
                 LazyColumn(
                     modifier = Modifier.weight(1f)
                 ) {
-                    items(userList) {
+                    items(userList, key = { it.uid }) {
                         if (it.uid.contains(search, true) || it.username.contains(search, true)) {
                             SelectUserRow(it, chosen.contains(it)) {
                                 selectUsersViewModel.onSelect(it)
