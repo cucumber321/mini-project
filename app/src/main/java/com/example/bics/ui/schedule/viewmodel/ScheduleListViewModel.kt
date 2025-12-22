@@ -49,11 +49,15 @@ class ScheduleListViewModel(private val scheduleRepository: ScheduleRepository, 
             ).map { MutableStateFlow(it) }
         }
 
+        val uids = _shifts.value.flatMap { it.value.uids }.toSet().toList()
+
+        val profiles = profileRepository.getUsers(uids).associateBy { it.uid }
+
         _shifts.value.forEach {
-            it.update { s -> s.copy(profiles = profileRepository.getUsers(s.uids)) }
+            it.update { s -> s.copy(profiles = s.uids.mapNotNull {uid -> profiles[uid] }.sortedBy { it.username }) }
         }
 
-        delay(300)
+        delay(100)
         _isRefreshing.update { false }
     }
 

@@ -18,5 +18,16 @@ enum class AppScreen {
     SelectUsers,
     AddShift,
     EditShift,
-    ShiftDetails
+    ShiftDetails,
+    ProductList,
+    AddProduct,
+    ViewProduct,
+    EditProduct,
+    Report,
+    DispatchList,
+    AddDispatch,
+    EditDispatch,
+    FilterDispatch,
+    DispatchDetails,
+    SelectDispatchProducts
 }

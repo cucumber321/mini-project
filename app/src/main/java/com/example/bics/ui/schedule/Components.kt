@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,14 +20,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -75,16 +79,16 @@ fun CustomDatePicker(
     initialDateMilli: Long? = null,
     isError: Boolean = false,
     enabled: Boolean = true,
-    onDateSelected: (Instant?) -> Unit
-) {
-    val datePickerState = rememberDatePickerState(
+    datePickerState: DatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = initialDateMilli ?: LocalDate
             .now()
             .atStartOfDay()
             .atZone(ZoneOffset.UTC)
             .toInstant()
             .toEpochMilli()
-    )
+    ),
+    onDateSelected: (Instant?) -> Unit,
+) {
     var showPicker by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -100,13 +104,14 @@ fun CustomDatePicker(
             ),
         border = if (isError) BorderStroke(1.dp, color = MaterialTheme.colorScheme.error) else ButtonDefaults.outlinedButtonBorder(enabled)
     ) {
-        Text(text =
-            if (datePickerState.selectedDateMillis == null) "-- --- ----" else
-            Instant
-                .ofEpochMilli(datePickerState.selectedDateMillis!!)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
-                .formatDate(),
+        Text(
+            text =
+                if (datePickerState.selectedDateMillis == null) "-- --- ----" else
+                    Instant
+                        .ofEpochMilli(datePickerState.selectedDateMillis!!)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                        .formatDate(),
         )
         Spacer(modifier = Modifier.width(16.dp))
         Icon(
@@ -146,7 +151,8 @@ fun CustomDatePicker(
                 ) {
                     Text("Cancel")
                 }
-            }
+            },
+            modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             DatePicker(
                 state = datePickerState,
@@ -225,16 +231,19 @@ fun CustomTimePicker(
                 TimePicker(
                     state = timePickerState,
                 )
-            }
+            },
+            modifier = Modifier.horizontalScroll(rememberScrollState())
         )
     }
 }
 
 @Composable
 fun ShiftBox(shift: Shift, onClick: () -> Unit) {
-    Button(onClick = onClick, shape = RoundedCornerShape(8.dp)) {
+    Button(onClick = onClick, shape = RoundedCornerShape(8.dp), contentPadding = PaddingValues(horizontal = 8.dp)) {
         Row(
-            modifier = Modifier.padding(8.dp).fillMaxSize()
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxSize()
         ) {
             Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
                 Text(text = shift
@@ -258,6 +267,7 @@ fun ShiftBox(shift: Shift, onClick: () -> Unit) {
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 10.dp)
+                    .fillMaxHeight()
             ) {
                 Text(text = shift.title, style = Typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(text = shift.profiles.joinToString(separator = ", ") { it.username }, style = Typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -308,6 +318,7 @@ fun SelectUsersList(
                     }
                     Text(
                         it.username,
+                        minLines = 2,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.width(96.dp),
@@ -338,19 +349,19 @@ fun SelectUserIcon(profile: UserProfile, modifier: Modifier = Modifier, onClick:
                 .fillMaxSize()
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.background)
-                .border(2.dp, MaterialTheme.colorScheme.inverseOnSurface, CircleShape)
+                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
         )
         Box(
             modifier = Modifier
                 .clip(CircleShape)
                 .fillMaxSize(0.25f)
-                .background(MaterialTheme.colorScheme.onSurface)
-                .border(2.dp, MaterialTheme.colorScheme.inverseOnSurface, CircleShape)
+                .background(MaterialTheme.colorScheme.surface)
+                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
         ) {
             Icon(
                 painter = painterResource(R.drawable.close),
                 contentDescription = "Close",
-                tint = MaterialTheme.colorScheme.inverseOnSurface,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .fillMaxSize()
             )
@@ -392,7 +403,7 @@ fun SearchBar(value: String, onSearch: (String) -> Unit, modifier: Modifier = Mo
         trailingIcon = {
             Icon(painter = painterResource(R.drawable.search), contentDescription = "Search", modifier = Modifier.size(24.dp))
         },
-        maxLines = 1,
+        singleLine = true,
         modifier = modifier,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
     )

@@ -24,7 +24,7 @@ class ShiftDetailsViewModel(private val scheduleRepository: ScheduleRepository, 
         viewModelScope.launch {
             _shift.update { scheduleRepository.getShift(shiftID) }
             _loading.update { false }
-            _profiles.update { profileRepository.getUsers(_shift.value.uids) }
+            _profiles.update { profileRepository.getUsers(_shift.value.uids).sortedBy { it.username } }
         }
     }
 

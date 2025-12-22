@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -25,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -115,7 +115,7 @@ fun ShiftDetailsScreen(navController: NavController, shiftID: String) {
                             contentAlignment = Alignment.Center,
                             modifier = Modifier.weight(1f).padding(dimensionResource(R.dimen.padding_medium))
                         ) {
-                            Text(text = "Are You Sure You Want to Delete This Shift?", textAlign = TextAlign.Justify)
+                            Text(text = "Are you sure you want to delete this shift?", textAlign = TextAlign.Justify)
                         }
                         Row(
                             horizontalArrangement = Arrangement
@@ -125,10 +125,10 @@ fun ShiftDetailsScreen(navController: NavController, shiftID: String) {
                                 ),
                             modifier = Modifier.fillMaxWidth().padding(dimensionResource(R.dimen.padding_small))
                         ) {
-                            Button(onClick = {showDialog = false}) {
+                            TextButton(onClick = {showDialog = false}) {
                                 Text(text = stringResource(R.string.cancel))
                             }
-                            Button(onClick = {
+                            TextButton(onClick = {
                                 shiftDetailsViewModel.onDelete(shiftID)
                                 Toast.makeText(
                                     context,
@@ -137,7 +137,7 @@ fun ShiftDetailsScreen(navController: NavController, shiftID: String) {
                                 ).show()
                                 navController.navigateUp()
                             }) {
-                                Text(text = stringResource(R.string.confirm))
+                                Text(text = stringResource(R.string.confirm), color = MaterialTheme.colorScheme.error)
                             }
                         }
                     }
@@ -179,7 +179,7 @@ fun ShiftDetailsScreen(navController: NavController, shiftID: String) {
                     title = "Users Assigned"
                 )
                 Text("Description", style = Typography.titleMedium)
-                Text(shift.description)
+                Text(shift.description.ifEmpty { "No Description" })
             }
             CustomFloatingButton(
                 icon = R.drawable.edit

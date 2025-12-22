@@ -25,9 +25,12 @@ enum class ErrorCode(@StringRes val errorMessage: Int) {
     EmptyTitle(errorMessage = R.string.error_message_empty_title),
     EmptyDate(errorMessage = R.string.error_message_empty_date),
     InvalidTimeRange(errorMessage = R.string.error_message_invalid_time_range),
-    NoUsers(errorMessage = R.string.error_message_no_users);
+    NoUsers(errorMessage = R.string.error_message_no_users),
+    EmptyField(errorMessage = R.string.error_message_empty_field),
+    NoDispatchProducts(errorMessage = R.string.error_message_no_dispatch_products);
 
     companion object {
+
         fun processException(exception: Exception): ErrorCode {
             return when (exception) {
                 is FirebaseAuthException -> {

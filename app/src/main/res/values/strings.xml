@@ -39,9 +39,15 @@
     <string name="error_message_network_error">A Network Issue Has Occurred, Please Try Again Later</string>
     <string name="error_message_empty_username">Username cannot be empty</string>
     <string name="error_message_user_disabled">Your Account Has Been Disabled</string>
-    <string name="error_message_unverified_email">Email Is Not Verified. Please Verify Email Before Logging In</string>
+    <string name="error_message_unverified_email">Email Is Not Verified. Please Check Your Inbox to Verify Email Before Logging In</string>
     <string name="error_message_invalid_password">Invalid Password</string>
     <string name="error_message_same_email">Email Cannot Be The Same As The Current Email</string>
+    <string name="error_message_empty_title">Title Cannot Be Empty</string>
+    <string name="error_message_invalid_time_range">End Date Must Be After Start Date</string>
+    <string name="error_message_empty_date">Date Cannot Be Empty</string>
+    <string name="error_message_no_users">Must Select At Least 1 User</string>
+    <string name="error_message_empty_field">Field Cannot Be Empty</string>
+    <string name="error_message_no_dispatch_products">No Products Selected</string>
 
 
     <string name="edit_profile">Edit Profile</string>
@@ -84,7 +90,7 @@
 
     <string name="park_and_pay">Park And Pay</string>
     <string name="balance">Balance</string>
-    <string name="balance_format">RM%.2f</string>
+    <string name="balance_format">RM%,.2f</string>
     <string name="top_up">Top Up</string>
     <string name="top_up_success">Top Up Success!</string>
     <string name="history">History</string>
@@ -132,9 +138,5 @@
     <string name="disabled">Disabled</string>
     <string name="select_location">Select Location</string>
     <string name="no_parking_session">No Parking Sessions</string>
-    <string name="error_message_empty_title">Title Cannot Be Empty</string>
-    <string name="error_message_invalid_time_range">End Date Must Be After Start Date</string>
-    <string name="error_message_empty_date">Date Cannot Be Empty</string>
-    <string name="error_message_no_users">Must Select At Least 1 User</string>
 
 </resources>

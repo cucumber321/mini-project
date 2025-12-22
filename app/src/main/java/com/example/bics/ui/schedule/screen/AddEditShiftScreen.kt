@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -40,6 +41,7 @@ import kotlinx.coroutines.launch
 import java.time.ZoneId
 import java.time.ZoneOffset
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditShiftScreen(navController: NavController, viewModel: ScheduleFormViewModel, keyword: String) {
     val enabled by viewModel.available.collectAsState()
@@ -120,7 +122,8 @@ fun AddEditShiftScreen(navController: NavController, viewModel: ScheduleFormView
                 errorCode = users.errorCode,
                 title = "Users Assigned",
                 onAddUserClick = {navController.navigate(AppScreen.SelectUsers.name) {launchSingleTop = true} },
-                onRemoveUserClick = viewModel::onRemoveUser
+                onRemoveUserClick = viewModel::onRemoveUser,
+                enabled = enabled
                 )
             UserTextBox(
                 upperLabel = "Description:",
@@ -135,6 +138,7 @@ fun AddEditShiftScreen(navController: NavController, viewModel: ScheduleFormView
             ThickOptionButtons(
                 onTopButtonPressed = {
                     coroutineScope.launch {
+                        val stack = navController.currentBackStackEntry
                         viewModel.onSubmit(
                             onSuccess = {
                             Toast.makeText(
@@ -142,7 +146,7 @@ fun AddEditShiftScreen(navController: NavController, viewModel: ScheduleFormView
                                 "Shift Successfully ${keyword}ed",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            navController.navigateUp()
+                            if (navController.currentBackStackEntry == stack) navController.navigateUp()
                         }, onFailure = {
                             Toast.makeText(
                                 context,
